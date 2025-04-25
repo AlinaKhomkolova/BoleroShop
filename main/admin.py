@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Product, Subcategories, Basket, BasketItems
+from .models import Category, Product, Subcategory, Basket, BasketItems
 
 
 @admin.register(Category)
@@ -9,8 +9,8 @@ class AdminCategory(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
-@admin.register(Subcategories)
-class AdminSubcategories(admin.ModelAdmin):
+@admin.register(Subcategory)
+class AdminSubcategory(admin.ModelAdmin):
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
 

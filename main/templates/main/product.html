@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<a type="button" class="btn btn-dark ms-4 mt-4" role="button" href="{% url 'main:categories' %}">Назад к
+    списку категорий</a>
+<div class="container mt-4">
+    <h1>{{ subcategory.name }}</h1>
+    {% if products %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        {% for product in products %}
+        {% if product.available %}
+        <div class="col">
+            <div class="card h-100">
+                {% if product.image %}
+                <a href="{% url 'main:product_detail' subcategory.slug product.pk%}"><img
+                        src="{{ product.image_medium.url }}" class="card-img-top" alt="{{ product.name }}"></a>
+                {% else %}
+                <a href="{% url 'main:product_detail' subcategory.slug product.pk%}"><img
+                        src="{% static 'img/no_image.png' %}" class="card-img-top" width="400" height="200"></a>
+                {% endif %}
+                <div class="card-body">
+                    <a class="link-dark link-underline-opacity-0"
+                       href="{% url 'main:product_detail' subcategory.slug product.pk%}">
+                        <h5 class="card-title">{{ product.name }}</h5></a>
+                    <p class="card-text">{{ product.description|truncatewords:60 }}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="mt-auto d-flex align-items-center w-100">
+                        <span class="fw-bold">{{ product.sell_price }} ₽</span>
+                        {% if product.discount %}
+                        <small class="text-muted text-decoration-line-through ms-2">{{ product.price }} ₽</small>
+                        {% endif %}
+                        <a type="button" class="btn btn-dark ms-auto" role="button" href="#">В корзину</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">Нет товаров в этой подкатегории.</p>
+    {% endif %}
+</div>
+{% endblock %}

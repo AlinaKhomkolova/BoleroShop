@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import CASCADE
 from django.urls import reverse
+from imagekit.models import ImageSpecField
+from pilkit.processors import ResizeToFill
 
 from config.settings import NULLABLE
 from users.models import User
@@ -22,8 +24,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('category_detail', args=[str(self.slug)])
 
-class Subcategories(models.Model):
+
+class Subcategory(models.Model):
     name = models.CharField(max_length=30,
                             unique=True, verbose_name='Название подкатегории')
     slug = models.SlugField(max_length=30,
@@ -41,15 +46,37 @@ class Subcategories(models.Model):
     def __str__(self):
         return self.name
 
+    # def get_absolute_url(self):
+    #     return reverse('main:categories',
+    #                    args=[self.subcategories.slug])
 
 
 class Product(models.Model):
-    subcategories = models.ForeignKey(Subcategories, related_name='products', on_delete=CASCADE,
+    subcategories = models.ForeignKey(Subcategory, related_name='products', on_delete=CASCADE,
                                       verbose_name='Подкатегория')
     name = models.CharField(max_length=100, verbose_name='Название продукта')
     slug = models.SlugField(max_length=100,
                             unique=True)
     image = models.ImageField(upload_to='products/%Y/%m/%d', verbose_name='Изображение продукта', **NULLABLE)
+    image_small = ImageSpecField(
+        source='image',
+        processors=[ResizeToFill(200, 200)],
+        format='JPEG',
+        options={'quality': 70}
+    )
+    image_medium = ImageSpecField(
+        source='image',
+        processors=[ResizeToFill(400, 300)],
+        format='JPEG',
+        options={'quality': 80}
+    )
+    image_large = ImageSpecField(
+        source='image',
+        processors=[ResizeToFill(800, 600)],
+        format='JPEG',
+        options={'quality': 90}
+    )
+
     description = models.TextField(verbose_name='Описание продукта', **NULLABLE)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     available = models.BooleanField(default=True, verbose_name='Доступность товара')
@@ -72,7 +99,7 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('main:product_detail',
-                       args=[self.slug])
+                       args=[self.subcategories.slug])
 
     def sell_price(self):
         if self.discount:

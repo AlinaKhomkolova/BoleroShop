@@ -1,0 +1,34 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block content %}
+
+<a type="button" class="btn btn-dark ms-4 mt-4" role="button" href="{% url 'main:product' subcategory.slug %}">Назад к
+    списку товаров</a>
+
+<div class="container mt-5">
+    <div class="row mt-5">
+        <!-- Изображение товара -->
+        <div class="col-md-6">
+            {% if product.image %}
+            <img src="{{ product.image_large.url }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+            <img src="{% static 'img/no_image.png' %}" class="card-img-top" width="400" height="200">
+            {% endif %}
+        </div>
+
+        <!-- Описание и цена товара -->
+        <div class="col-md-6">
+            <h1>{{ product.name }}</h1>
+            <div class="mb-3">
+                <p>{{ product.description|safe }}</p>
+            </div>
+            <span class="fw-bold">{{ product.sell_price }} ₽</span>
+            {% if product.discount %}
+            <small class="text-muted text-decoration-line-through ms-2">{{ product.price }} ₽</small>
+            {% endif %}
+            <a type="button" class="btn btn-dark ms-auto" role="button" href="#">В корзину</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -20,3 +20,27 @@ html {
     margin: 0 auto;
     padding: 0 160px;
 }
+
+.popover {
+    max-width: 250px;
+    font-family: 'Montserrat', sans-serif;
+}
+.popover .list-unstyled {
+    padding-left: 0;
+}
+.popover a {
+    text-decoration: none;
+    color: #000;
+    display: block;
+    padding: 8px 15px;
+}
+.popover a:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-menu .dropdown-toggle {
+    padding-right: 2em;
+}
+.dropdown-menu .dropdown-toggle::after {
+    margin-left: 0.5rem;
+}
