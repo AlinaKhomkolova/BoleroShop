@@ -52,8 +52,8 @@ class Subcategory(models.Model):
 
 
 class Product(models.Model):
-    subcategories = models.ForeignKey(Subcategory, related_name='products', on_delete=CASCADE,
-                                      verbose_name='Подкатегория')
+    subcategory = models.ForeignKey(Subcategory, related_name='products', on_delete=CASCADE,
+                                    verbose_name='Подкатегория')
     name = models.CharField(max_length=100, verbose_name='Название продукта')
     slug = models.SlugField(max_length=100,
                             unique=True)
