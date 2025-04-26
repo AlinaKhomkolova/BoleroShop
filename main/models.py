@@ -101,6 +101,7 @@ class Product(models.Model):
         return reverse('main:product_detail',
                        args=[self.subcategories.slug])
 
+    @property
     def sell_price(self):
         if self.discount:
             return round(self.price - self.price * self.discount / 100, 2)
