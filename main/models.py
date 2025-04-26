@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models import CASCADE
-from django.urls import reverse
 from imagekit.models import ImageSpecField
 from pilkit.processors import ResizeToFill
 
