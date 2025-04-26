@@ -122,7 +122,7 @@ class Basket(models.Model):
 
 class BasketItems(models.Model):
     basket = models.ForeignKey(Basket, related_name='items', verbose_name='Корзина', on_delete=CASCADE)
-    product = models.ForeignKey(Product, verbose_name='Продукт', on_delete=CASCADE)
+    product = models.ForeignKey(Product, related_name='basket_entries', verbose_name='Продукт', on_delete=CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='Количество продуктов в корзине', default=1)
 
     class Meta:
