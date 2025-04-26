@@ -26,7 +26,7 @@ class AdminProduct(admin.ModelAdmin):
 
 @admin.register(Basket)
 class AdminBasket(admin.ModelAdmin):
-    list_display = ['user']
+    list_display = ['id','user']
     list_filter = ['user']
 
 
