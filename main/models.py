@@ -108,7 +108,7 @@ class Product(models.Model):
 
 
 class Basket(models.Model):
-    user = models.OneToOneField(User, related_name='baskets', verbose_name='Владелец корзины',
+    user = models.OneToOneField(User, related_name='basket', verbose_name='Владелец корзины',
                                 on_delete=CASCADE)
 
     class Meta:
