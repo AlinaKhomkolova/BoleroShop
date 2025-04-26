@@ -46,10 +46,6 @@ class Subcategory(models.Model):
     def __str__(self):
         return self.name
 
-    # def get_absolute_url(self):
-    #     return reverse('main:categories',
-    #                    args=[self.subcategories.slug])
-
 
 class Product(models.Model):
     subcategory = models.ForeignKey(Subcategory, related_name='products', on_delete=CASCADE,
