@@ -17,7 +17,7 @@ class AdminSubcategory(admin.ModelAdmin):
 
 @admin.register(Product)
 class AdminProduct(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price',
+    list_display = ['id','name', 'slug', 'price',
                     'created', 'updated', 'discount', 'available']
     list_filter = ['available', 'created', 'updated']
     list_editable = ['price', 'available', 'discount']
