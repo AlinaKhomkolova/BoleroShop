@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import CASCADE
 from imagekit.models import ImageSpecField
 from pilkit.processors import ResizeToFill
+from pytils.translit import slugify
 
 from config.settings import NULLABLE
 from users.models import User
@@ -11,8 +12,8 @@ class Category(models.Model):
     name = models.CharField(max_length=30,
                             unique=True, verbose_name='Название категории')
     slug = models.SlugField(max_length=30,
-                            unique=True)
-    image = models.ImageField(upload_to='category/%y/%m/%d', verbose_name='Изображение категории', **NULLABLE)
+                            unique=True, **NULLABLE)
+    image = models.ImageField(upload_to='category/%Y/%m/%d', verbose_name='Изображение категории', **NULLABLE)
 
     class Meta:
         ordering = ['name']
@@ -23,12 +24,19 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        if self.slug != slugify(self.name):
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 
 class Subcategory(models.Model):
     name = models.CharField(max_length=30,
                             unique=True, verbose_name='Название подкатегории')
     slug = models.SlugField(max_length=30,
-                            unique=True)
+                            unique=True, **NULLABLE)
     image = models.ImageField(upload_to='category/%y/%m/%d', verbose_name='Изображение подкатегории', **NULLABLE)
     category = models.ForeignKey(Category, related_name='subcategories', on_delete=CASCADE,
                                  verbose_name='Категория')
@@ -42,13 +50,20 @@ class Subcategory(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        if self.slug != slugify(self.name):
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 
 class Product(models.Model):
     subcategory = models.ForeignKey(Subcategory, related_name='products', on_delete=CASCADE,
                                     verbose_name='Подкатегория')
     name = models.CharField(max_length=100, verbose_name='Название продукта')
     slug = models.SlugField(max_length=100,
-                            unique=True)
+                            unique=True, **NULLABLE)
     image = models.ImageField(upload_to='products/%Y/%m/%d', verbose_name='Изображение продукта', **NULLABLE)
     image_small = ImageSpecField(
         source='image',
@@ -94,6 +109,13 @@ class Product(models.Model):
         if self.discount:
             return round(self.price - self.price * self.discount / 100, 2)
         return self.price
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        if self.slug != slugify(self.name):
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Basket(models.Model):
