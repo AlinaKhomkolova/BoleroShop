@@ -1,53 +1,51 @@
-from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView
+from rest_framework import generics
 
 from main.models import Product, Category, Subcategory
+from main.paginators import Pagination
+from main.serializers import ProductSerializer, SubcategorySerializer, CategoryListSerializer, \
+    CategoryCreatedSerializer, CategoryRUDSerializer
 
 
-class BaseView(ListView):
-    model = Category
-    template_name = 'main/home.html'
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['title'] = 'Главная'
-        return data
+class CategoryListAPIView(generics.ListAPIView):
+    """Вывод списка категорий"""
+    queryset = Category.objects.all()
+    serializer_class = CategoryListSerializer
+    pagination_class = Pagination
 
 
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = 'main/product_detail.html'
-    context_object_name = 'product'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = self.object.name
-        context['subcategory'] = self.object.subcategories
-        return context
+class CategoryCreatedAPIView(generics.CreateAPIView):
+    """Создание категории"""
+    queryset = Category.objects.all()
+    serializer_class = CategoryCreatedSerializer
 
 
-class CategoryListView(ListView):
-    model = Category
-    template_name = 'main/categories.html'
-    context_object_name = 'categories'
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['title'] = 'Категории товаров'
-        return data
+class CategoryRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """Удаление, изменение, просмотри одной позиции"""
+    queryset = Category.objects.all()
+    serializer_class = CategoryRUDSerializer
 
 
-class ProductListView(ListView):
-    model = Product
-    template_name = 'main/product.html'
-    context_object_name = 'products'
+class SubcategoryListAPIView(generics.ListAPIView):
+    """Вывод списка подкатегорий"""
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategorySerializer
+    pagination_class = Pagination
 
-    def get_queryset(self):
-        self.subcategory = get_object_or_404(Subcategory, slug=self.kwargs['slug'])
-        return Product.objects.filter(subcategories=self.subcategory)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['subcategory'] = self.subcategory
-        context['title'] = self.subcategory.name
-        return context
+class SubcategoryCreatedAPIView(generics.CreateAPIView):
+    """Создание подкатегории"""
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategorySerializer
+
+
+class SubcategoryRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """Удаление, изменение, просмотр одной позиции товара"""
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategorySerializer
+
+
+class ProductListAPIView(generics.ListAPIView):
+    """Вывод списка товаров """
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    pagination_class = Pagination

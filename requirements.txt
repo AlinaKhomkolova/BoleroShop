@@ -7,3 +7,5 @@ django-imagekit
 drf-yasg
 djangorestframework-simplejwt
 djangorestframework
+pytils
+dj-rest-auth

@@ -5,7 +5,6 @@ from pilkit.processors import ResizeToFill
 from pytils.translit import slugify
 
 from config.settings import NULLABLE
-from users.models import User
 
 
 class Category(models.Model):
@@ -25,6 +24,7 @@ class Category(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        """Автоматическая генерация уникального slug из имени"""
         if not self.slug:
             self.slug = slugify(self.name)
         if self.slug != slugify(self.name):
@@ -51,6 +51,7 @@ class Subcategory(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        """Автоматическая генерация уникального slug из имени"""
         if not self.slug:
             self.slug = slugify(self.name)
         if self.slug != slugify(self.name):
@@ -106,40 +107,15 @@ class Product(models.Model):
 
     @property
     def sell_price(self):
+        """Расчет цены с учетом скидки"""
         if self.discount:
             return round(self.price - self.price * self.discount / 100, 2)
         return self.price
 
     def save(self, *args, **kwargs):
+        """Автоматическая генерация уникального slug из имени"""
         if not self.slug:
             self.slug = slugify(self.name)
         if self.slug != slugify(self.name):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-
-
-class Basket(models.Model):
-    user = models.OneToOneField(User, related_name='basket', verbose_name='Владелец корзины',
-                                on_delete=CASCADE)
-
-    class Meta:
-        ordering = ['user']
-        verbose_name = 'Корзина'
-        verbose_name_plural = 'Корзины'
-
-    def __str__(self):
-        return f'Корзина пользователя {self.user.username}'
-
-
-class BasketItems(models.Model):
-    basket = models.ForeignKey(Basket, related_name='items', verbose_name='Корзина', on_delete=CASCADE)
-    product = models.ForeignKey(Product, related_name='basket_entries', verbose_name='Продукт', on_delete=CASCADE)
-    quantity = models.PositiveIntegerField(verbose_name='Количество продуктов в корзине', default=1)
-
-    class Meta:
-        ordering = ['basket']
-        verbose_name = 'Позиция в корзине'
-        verbose_name_plural = 'Позиции в корзине'
-
-    def __str__(self):
-        return f'{self.product.name} × {self.quantity}'

@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from pytils.translit import slugify
 
 from config.settings import NULLABLE
 
@@ -76,3 +77,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def save(self, *args, **kwargs):
+        """Автоматическая генерация уникального slug из имени"""
+        if not self.slug:
+            self.slug = slugify(self.username)
+        if self.slug != slugify(self.username):
+            self.slug = slugify(self.username)
+        super().save(*args, **kwargs)

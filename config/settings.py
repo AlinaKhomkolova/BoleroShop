@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,9 +35,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework', 'rest_framework_simplejwt',
 
-    'main', 'users',
+    'rest_framework', 'rest_framework_simplejwt',
+    'rest_framework.authtoken', 'dj_rest_auth',
+
+    'drf_yasg',
+
+    'main', 'users', 'cart',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +129,25 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    # Настройки JWT-токенов
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'dj_rest_auth.jwt_auth.JWTAuthentication',
+    ],
+    # для всех пользователь
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny', ],
+}
+REST_USE_JWT = True
+
+# Настройки срока действия токенов
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'email',
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_COOKIE': 'access_token',
+    'AUTH_COOKIE_SECURE': False,
+}
+
+CART_SESSION_ID = 'cart'

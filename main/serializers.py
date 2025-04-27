@@ -3,19 +3,47 @@ from rest_framework import serializers
 from main.models import Category, Product, Subcategory
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategoryRUDSerializer(serializers.ModelSerializer):
+    """Сериализатор для удаления изменения и просмотра одной позиции"""
+
     class Meta:
         model = Category
         fields = '__all__'
 
 
+class CategoryListSerializer(serializers.ModelSerializer):
+    """Просмотр всех категорий"""
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class CategoryCreatedSerializer(serializers.ModelSerializer):
+    """Создание категории"""
+
+    class Meta:
+        model = Category
+        fields = ['name', 'image']
+
+    def create(self, validated_data):
+        category = Category.objects.create(
+            name=validated_data['name'],
+            image=validated_data['image']
+        )
+        return category
+
+
 class SubcategorySerializer(serializers.ModelSerializer):
+    """Просмотр всех подкатегорий"""
+
     class Meta:
         model = Subcategory
         fields = '__all__'
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    """Просмотр всех продуктов"""
     # Категория продукта
     category = serializers.CharField(
         source='subcategory.category.name',
