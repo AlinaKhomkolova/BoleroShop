@@ -17,8 +17,10 @@ class AdminSubcategory(admin.ModelAdmin):
 
 @admin.register(Product)
 class AdminProduct(admin.ModelAdmin):
-    list_display = ['id', 'name', 'slug', 'price',
-                    'created', 'updated', 'discount', 'available']
+    list_display = ['id', 'name', 'slug', 'price', 'discount', 'sell_price',
+                    'created', 'updated', 'available']
     list_filter = ['available', 'created', 'updated']
+    search_fields = ['name', 'slug']  # Поиск по названию и слагу
+    ordering = ['-created']  # Сортировка по дате создания
     list_editable = ['price', 'available', 'discount']
     prepopulated_fields = {'slug': ('name',)}

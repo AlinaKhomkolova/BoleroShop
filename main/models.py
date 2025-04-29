@@ -37,7 +37,7 @@ class Subcategory(models.Model):
                             unique=True, verbose_name='Название подкатегории')
     slug = models.SlugField(max_length=30,
                             unique=True, **NULLABLE)
-    image = models.ImageField(upload_to='category/%y/%m/%d', verbose_name='Изображение подкатегории', **NULLABLE)
+    image = models.ImageField(upload_to='category/%Y/%m/%d', verbose_name='Изображение подкатегории', **NULLABLE)
     category = models.ForeignKey(Category, related_name='subcategories', on_delete=CASCADE,
                                  verbose_name='Категория')
 

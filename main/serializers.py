@@ -4,34 +4,34 @@ from main.models import Category, Product, Subcategory
 
 
 class CategoryRUDSerializer(serializers.ModelSerializer):
-    """Сериализатор для удаления изменения и просмотра одной позиции"""
+    """Сериализатор для CRUD операций с категориями (GET/PUT/PATCH/DELETE)"""
 
     class Meta:
         model = Category
         fields = '__all__'
+        # Слаг генерируется автоматически, его нельзя редактировать
+        read_only_fields = ('slug',)
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
-    """Просмотр всех категорий"""
+    """Сериализатор для списка категорий (GET)"""
 
     class Meta:
         model = Category
         fields = '__all__'
+        # Слаг генерируется автоматически, его нельзя редактировать
+        read_only_fields = ('slug',)
 
 
 class CategoryCreatedSerializer(serializers.ModelSerializer):
-    """Создание категории"""
+    """Сериализатор для создания категории (POST)"""
 
     class Meta:
         model = Category
         fields = ['name', 'image']
 
     def create(self, validated_data):
-        category = Category.objects.create(
-            name=validated_data['name'],
-            image=validated_data['image']
-        )
-        return category
+        return Category.objects.create(**validated_data)
 
 
 class SubcategorySerializer(serializers.ModelSerializer):

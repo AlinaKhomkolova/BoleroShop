@@ -6,7 +6,7 @@ from main.models import Product
 
 class Cart(object):
     def __init__(self, request):
-        """Инициализируем корзину"""
+        """Инициализация корзины из сессии пользователя"""
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
@@ -26,6 +26,7 @@ class Cart(object):
         self.save()
 
     def save(self):
+        """Сохраняет корзину в сессию"""
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
 
@@ -50,6 +51,7 @@ class Cart(object):
             yield item
 
     def __len__(self):
+        """Возвращает общее количество товаров в корзине"""
         return sum(item['quantity'] for item in self.cart.values())
 
     def get_total_price(self):

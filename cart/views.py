@@ -9,7 +9,7 @@ from main.models import Product
 
 
 class CartAddView(APIView):
-    """"""
+    """Вью для управления товарами в корзине"""
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -29,19 +29,19 @@ class CartAddView(APIView):
             cart = Cart(request)
             cart.add(product, quantity, update_quantity=update_quantity)  # Обновление количества
 
+            # Возвращаем обновленные данные корзины для удобства
             return Response({"success": "Товар добавлен/обновлен"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, product_id):
         """Удаление товара из корзины по product_id"""
-
         try:
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
             return Response({"error": "Товар не найден"}, status=status.HTTP_404_NOT_FOUND)
 
         cart = Cart(request)
-        cart.remove(product)
+        cart.remove(product) # Удаляем товар из корзины
 
         return Response({"success": "Товар удален"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -71,6 +71,7 @@ class CartClearView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request):
+        """Полная очистка корзины"""
         cart = Cart(request)
         cart.clear()
         return Response({"success": "Корзина очищена"}, status=status.HTTP_204_NO_CONTENT)

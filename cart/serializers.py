@@ -7,5 +7,5 @@ class CartItemSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
     # Количество товара
     quantity = serializers.IntegerField(min_value=1)
-    # Опционально перезапись товара или обновление
+    # True — заменить текущее количество, False — добавить к текущему (опционально)
     update_quantity = serializers.BooleanField(required=False)
